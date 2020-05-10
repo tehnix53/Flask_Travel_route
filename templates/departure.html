@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<meta charset="UTF-8">
+<div class="container p-3">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css">
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <a class="navbar-brand" href="/">{{title}}</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav">
+                <p>{%for k,v in departures.items()%}
+                <li>
+                    <a href="{{k}}"
+                       class="{% if request.path == k %}nav-link-active{%else%}nav-link{% endif %}">{{v}}</a>
+                </li>
+                {%endfor%}
+            </ul>
+        </div>
+    </nav>
+</div>
+
+
+<div class="container p-3">
+    <div class='container p-2'>
+        {%for k,v in departures.items()%}{%if request.path == k%}
+        <h1 class="display-5 mt-4">Летим из {{v[2::]}}!</h1>{%endif%}{%endfor%}
+        <p class="mb-4"> Найдено {{filtered|length}} туров от {{price|max}} до
+            {{price|min}} и от {{nights|min}} до {{nights|max}} ночей
+        </p>
+    </div>
+
+    <div class="row">
+        {%for element in tours_list%}{%if element['departure']== request.path[11:-1:] %}
+        <div class="col-4">
+            <div class="card mb-4">
+                <div class="embed-responsive embed-responsive-16by9">
+                    <img class="card-img-top embed-responsive-item" src={{element['picture']}}
+                         alt=""/>
+                </div>
+                <div class="card-body">
+                    <h2 class="h5 card-title">{{element['country']}}, {{element['title']}}</h2>
+                    <p class="card-text">{{element['description']|truncate(200)}}</p>
+                    <h5 align="justify">
+                        <span class="badge badge-success">{{element['nights']}} ночей</span>
+                        <span class="badge badge-warning">рейтинг : {{element['stars']}}</span>
+                        <span class="badge badge-danger">от {{element['price']}} руб</span>
+                    </h5>
+                    <br>
+                    <a href="/tour/{{element['title']}}" class="btn btn-sm btn-primary">Подробнее</a>
+                </div>
+            </div>
+        </div>
+        {%endif%}
+        {%endfor%}
+    </div>
+</div>
